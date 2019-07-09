@@ -1,0 +1,11 @@
+<canvas
+  canvas-id="canvas" 
+  class="canvas" 
+  bindtouchstart="onTouchStart"
+  binderror="canvasIdErrorCallback"
+>
+  <cover-view>
+    <slot></slot>
+  </cover-view>
+</canvas>
+

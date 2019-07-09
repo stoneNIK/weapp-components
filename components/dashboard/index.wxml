@@ -1,0 +1,6 @@
+<!-- 仪表盘组件 -->
+<canvas canvas-id="canvas" class="canvas">
+  <cover-view>
+    <slot></slot>
+  </cover-view>
+</canvas>
