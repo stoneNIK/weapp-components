@@ -1,4 +1,8 @@
 # weapp-radar
+![demo_01](/demo/demo_01.png)
+
+![demo_02](/demo/demo_02.png)
+
 微信小程序（原生） 雷达图
 
 * 雷达图组件
