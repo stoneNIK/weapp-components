@@ -33,6 +33,8 @@ let mCount,  //元素个数 最多显示6个边
 
 const canvasId = 'canvas'
 
+let localRadarList = [] // 数据数组
+
 Component({
   properties: {
     list: {
@@ -94,7 +96,7 @@ Component({
   methods: {
     // 初始化设置参数
     initSetting() {
-      const len = this.data.list.length
+      const len = localRadarList.length
       mCount = len > 6 ? 6 : len
       mSlot = this.data.mSlot
       mAngle = Math.PI * 2 / mCount
@@ -148,7 +150,7 @@ Component({
     // 绘制文字
     drawText() {
       ctx.save()
-      let mData = this.data.list
+      let mData = localRadarList
       let fontSize = mCenter / 12
       ctx.setFontSize(fontSize)
       for (let i = 0; i < mCount; i++) {
@@ -231,12 +233,13 @@ Component({
     //绘制数据区域
     drawRegion() {
       ctx.save()
-      let mData = this.data.list
+      let mData = localRadarList
       ctx.beginPath()
 
       for (let i = 0; i < mCount; i++) {
-        let x = mCenterX + mRadius * Math.cos(mAngle * i - Math.PI / 2) * mData[i].value / 100
-        let y = mCenter + mRadius * Math.sin(mAngle * i - Math.PI / 2) * mData[i].value / 100
+        const value = Math.min(mData[i].value, 100)
+        let x = mCenterX + mRadius * Math.cos(mAngle * i - Math.PI / 2) * value / 100
+        let y = mCenter + mRadius * Math.sin(mAngle * i - Math.PI / 2) * value / 100
         ctx.lineTo(x, y)
       }
       ctx.closePath()
@@ -275,7 +278,7 @@ Component({
     },
     drawCircle() {
       ctx.save()
-      let mData = this.data.list
+      let mData = localRadarList
       for (let i = 0; i < mCount; i++) {
         /**
          * 绘制点的时候往中心收一点,刚好包含在多边形内
@@ -322,30 +325,41 @@ Component({
         this.triggerEvent('click', clickArea || touch0)
       }
     },
+    downloadFile(item) {
+      return new Promise((resolve, reject) => {
+        if (!item.img) {
+          resolve(item)
+          return
+        }
+        wx.getImageInfo({
+          src: item.img,
+          success(res) {
+            const _item = item
+            _item.img = res.path
+            resolve(item)
+          },
+          fail() {
+            reject(item)
+          }
+        })
+      })
+    },
     /**
      * 开始绘制canvas
      */
     initCanvas() {
-      if (!(this && this.data.list.length)) {
+      if (!(localRadarList.length)) {
         return
       }
-      const query = wx.createSelectorQuery().in(this)
-      query.select('.canvas').boundingClientRect(res => {
-        if (!res) {
-          return
-        }
+      const promise = this.getBoundingClientRect()
+      promise.then(res => {
         /**
          * 根据画布尺寸计算中心点, 宽度, 半径等
          */
         mW = res.width
         mH = res.height
         this.initSetting()
-
-        /**清空画布，同时清除临时图片 */
-        ctx.clearRect(0, 0, mW, mH)
-        this.setData({
-          imagePath: ''
-        })
+        this.clearCanvas()
         /**
          * 无网格样式时则不需要绘制
          */
@@ -366,17 +380,65 @@ Component({
          * 将之前每一次的路径存储起来，最后执行draw.避免最后一次绘制覆盖之前的路径
          */
         ctx.draw(true)
-      }).exec()
+      }).catch(e => { })
+    },
+    // BUG：小程序 drawImage 不允许使用外网图片地址
+    // 开始绘制之前序列化数据，将外网的icon下载到本地
+    preInitCanvas() {
+      this.showErrMsg('加载中...')
+      const downloadFile = this.downloadFile
+      const promises = localRadarList.map(s => downloadFile(s))
+      Promise.all(promises).then(res => {
+        localRadarList = res
+        this.initCanvas()
+      }).catch(e => {
+        this.showErrMsg(e)
+      })
+    },
+    /**
+     * showErrMsg
+     * @param {String} errMsg 提示文字
+     * @param {Boolean} danger 是否为‘错误’，错误则显示红色文字
+     */
+    showErrMsg(errMsg, danger) {
+      const promise = this.getBoundingClientRect()
+      promise.then(res => {
+        mW = res.width
+        mH = res.height
+        // 绘制文本
+        ctx.setFontSize(10)
+        ctx.setFillStyle(danger ? '#ff3300' : '#ffffff')
+        const metrics = ctx.measureText(errMsg)
+        ctx.fillText(errMsg, (mW - metrics.width) / 2, mH / 2, mW)
+        ctx.draw(true)
+      }).catch(e => { /* console.log(e) */ })
+    },
+    clearCanvas() {
+      ctx.clearRect(0, 0, mW, mH)
+      this.setData({ imagePath: '' })
+    },
+    // 获取当前画布的尺寸
+    getBoundingClientRect() {
+      const query = wx.createSelectorQuery().in(this)
+      return new Promise((resolve, reject) => {
+        query.select('.canvas').boundingClientRect(res => {
+          if (!res) {
+            reject()
+            return
+          }
+          // 执行回调
+          resolve(res)
+        }).exec()
+      })
     }
   },
   canvasIdErrorCallback(e) {
-    console.error('canvas发生错误: ' + e.detail.errMsg)
-  },
-  created: function () {
+    this.showErrMsg('canvas发生错误: ' + e.detail.errMsg, 1)
   },
   observers: {
     'list': function (e) {
-      this.initCanvas()
+      localRadarList = this.data.list
+      this.preInitCanvas()
     }
   },
   lifetimes: {
@@ -384,9 +446,6 @@ Component({
       // 在组件实例进入页面节点树时执行
       ctx = wx.createCanvasContext(canvasId, this)
     }
-  },
-  ready: function () {
-    this.initCanvas()
   },
   externalClasses: ['hik-class']
 })
