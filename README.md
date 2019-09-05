@@ -4,6 +4,7 @@
 ![demo_02](/demo/demo_02.png)
 
 微信小程序（原生） 雷达图
+**支持canvas转为Image**
 
 * 雷达图组件
 * @params
