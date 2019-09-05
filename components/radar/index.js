@@ -3,6 +3,7 @@
  * @params
  * list {Array} 数据 默认[], 数值请计算成百分比对应的0-100的整数值
  * e.g [{value: 10, text: '文字', img: 'src_url', color: '#f39'}]
+ * bgColor {String} 多边形背景颜色
  * noGrid {Boolean} 无网格 默认false
  * lineColor {String} 网格线的颜色 默认'#97D1FD'
  * lineDash {Boolean} 是否是虚线网格 默认true
@@ -14,11 +15,17 @@
  * pointsColor {String} 数据点的颜色 
  * pointsDash {Boolean} 数据点是否为虚线 默认false
  * pointsFill {Boolean} 数据点是否为实心 默认false
+ * background { String } 数据区域背景色，默认为空
+ * radiusPercent {String} 多边形的区域大小比例，默认为宽高最小边的70%
+ * radarLinePattern {Array} 虚线多边形配置， 一组描述交替绘制线段和间距（坐标空间单位）长度的数字
+ * outlineBorder {Boolean} 是否显示最外层多边形线框， 默认为false
+ * transformImage {Boolean} 是否将canvas转为Image，因为小程序中canvas层级最高，导致很多显示问题。 默认为true
  */
 
 /**
  * BUG
  * TODO: 不能绘制四边形,drawRegion时无法绘制出图形
+ * bind:swipe 滑动事件 {direction: {x:(LEFT|RIGHT),y:(TOP|BOTTOM)}, distance:{x:0,y:0}}
  */
 let mCount,  //元素个数 最多显示6个边
   mSlot, //一条线上的总节点数
@@ -37,9 +44,21 @@ let localRadarList = [] // 数据数组
 
 Component({
   properties: {
+    transformImage: {
+      type: Boolean,
+      value: true
+    },
+    radiusPercent: {
+      type: String,
+      value: 0.7
+    },
     list: {
       type: Array,
       value: []
+    },
+    bgColor: {
+      type: String,
+      value: ''
     },
     lineColor: {
       type: String,
@@ -88,10 +107,18 @@ Component({
     background: {
       type: String,
       value: ''
+    },
+    radarLinePattern: {
+      type: Array,
+      value: [4, 2]
+    },
+    outlineBorder: {
+      type: Boolean,
+      value: false
     }
   },
   data: {
-
+    tempImgPath: '', // 绘制完成后将画布内的内容导出成图片，得到的临时图片地址
   },
   methods: {
     // 初始化设置参数
@@ -102,7 +129,24 @@ Component({
       mAngle = Math.PI * 2 / mCount
       mCenter = mH / 2
       mCenterX = mW / 2
-      mRadius = mCenter * 0.7
+      mRadius = mCenter * this.data.radiusPercent
+    },
+    drawBgColor() {
+      ctx.save()
+      let currR = mRadius
+      ctx.setFillStyle(this.data.bgColor)
+      ctx.beginPath()
+      for (let j = 0; j < mCount; j++) {
+        /**
+         * 弧度减去Math.PI/2是为了将第一个点设置在时钟12点位置上,便于奇数点雷达图对称显示
+         */
+        let x = mCenterX + currR * Math.cos(mAngle * j - Math.PI / 2)
+        let y = mCenter + currR * Math.sin(mAngle * j - Math.PI / 2)
+        ctx.lineTo(x, y)
+      }
+      ctx.closePath()
+      ctx.fill()
+      ctx.restore()
     },
     // 绘制多边形边
     drawPolygon() {
@@ -110,12 +154,14 @@ Component({
       let r = mRadius / mSlot
       ctx.setStrokeStyle(this.data.lineColor)
       if (this.data.lineDash) {
-        ctx.setLineDash([4, 2], 10)
+        ctx.setLineDash(this.data.radarLinePattern, 5)
       }
       //根据slot的数量画圈
-      for (let i = 0; i < mSlot; i++) {
-        ctx.beginPath();
-        let currR = r * (i + 1); //当前半径
+      // 如果有背景色，则不绘制最外层的多边形连线
+      const _mslot = this.data.outlineBorder ? mSlot : this.data.bgColor ? mSlot - 1 : mSlot
+      for (let i = 0; i < _mslot; i++) {
+        ctx.beginPath()
+        let currR = r * (i + 1) //当前半径
         //画6条边
         for (let j = 0; j < mCount; j++) {
           /**
@@ -133,6 +179,10 @@ Component({
     drawLines() {
       ctx.save()
       ctx.beginPath()
+      ctx.setStrokeStyle(this.data.lineColor)
+      if (this.data.lineDash) {
+        ctx.setLineDash(this.data.radarLinePattern, 5)
+      }
       for (let i = 0; i < mCount; i++) {
         let x = mCenterX + mRadius * Math.cos(mAngle * i - Math.PI / 2)
         let y = mCenter + mRadius * Math.sin(mAngle * i - Math.PI / 2)
@@ -143,7 +193,7 @@ Component({
        * 此处不能使用闭合路径,因为起始点是中心点,终点是在圆弧上,若闭合后则会有一条实线连接起点和终点
        */
       // ctx.closePath()
-      ctx.setStrokeStyle(this.data.lineColor)
+      // ctx.setStrokeStyle(this.data.lineColor)
       ctx.stroke()
       ctx.restore()
     },
@@ -151,12 +201,12 @@ Component({
     drawText() {
       ctx.save()
       let mData = localRadarList
-      let fontSize = mCenter / 12
-      ctx.setFontSize(fontSize)
       for (let i = 0; i < mCount; i++) {
+        let fontSize = mData[i].fontSize || mCenter / 12
+        ctx.setFontSize(fontSize)
         let imgWidth = mData[i].img ? 20 : 0
-        let x = mCenterX + mRadius * Math.cos(mAngle * i - Math.PI / 2) * 1.05
-        let y = mCenter + mRadius * Math.sin(mAngle * i - Math.PI / 2) * 1.05
+        let x = mCenterX + mRadius * Math.cos(mAngle * i - Math.PI / 2) * 1.1
+        let y = mCenter + mRadius * Math.sin(mAngle * i - Math.PI / 2) * 1.1
         ctx.setFillStyle(mData[i].color || '#7B7A7A')
         /**
          * 根据角度设置向哪个方向位移,确保文字及图片在多边形外 
@@ -214,14 +264,14 @@ Component({
           ctx.drawImage(
             mData[i].img,
             x + (ctx.measureText(mData[i].text).width - imgWidth) / 2,
-            y - imgWidth - fontSize,
+            y - imgWidth - fontSize - 2,
             imgWidth,
             imgWidth
           )
 
           areaList[i] = {
             x: x - 2,
-            y: y - fontSize - imgWidth - 2,
+            y: y - fontSize - imgWidth - 4,
             width: ctx.measureText(mData[i].text).width + 4,
             height: fontSize + imgWidth + 4,
             data: mData[i]
@@ -309,7 +359,7 @@ Component({
       }
       ctx.restore()
     },
-    onTouchStart(e) {
+    onTap(e) {
       let touch0 = e.touches && e.touches[0]
       if (touch0) {
         // 判断落点位置,并触发调用页面的回调事件
@@ -351,6 +401,9 @@ Component({
       if (!(localRadarList.length)) {
         return
       }
+      this.setData({
+        tempImgPath: ''
+      })
       const promise = this.getBoundingClientRect()
       promise.then(res => {
         /**
@@ -360,6 +413,10 @@ Component({
         mH = res.height
         this.initSetting()
         this.clearCanvas()
+        // 如果有背景色，则绘制一个多边形背景色
+        if (this.data.bgColor) {
+          this.drawBgColor()
+        }
         /**
          * 无网格样式时则不需要绘制
          */
@@ -379,8 +436,32 @@ Component({
         /**
          * 将之前每一次的路径存储起来，最后执行draw.避免最后一次绘制覆盖之前的路径
          */
-        ctx.draw(true)
-      }).catch(e => { })
+        ctx.draw(false, () => {
+          if (!(this.data.transformImage && !this.data.tempImgPath)) {
+            return
+          }
+          const that = this
+          setTimeout(() => {
+            wx.canvasToTempFilePath({
+              x: 0,
+              y: 0,
+              width: mW,
+              height: mH,
+              canvasId: canvasId,
+              success: function (res) {
+                that.setData({
+                  tempImgPath: res.tempFilePath
+                })
+              },
+              fail(e) {
+                console.log(e)
+              }
+            }, this)
+          }, 100)
+        })
+      }).catch(e => {
+        console.log(e)
+      })
     },
     // BUG：小程序 drawImage 不允许使用外网图片地址
     // 开始绘制之前序列化数据，将外网的icon下载到本地

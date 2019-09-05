@@ -1,0 +1,34 @@
+<van-popup show="{{ isShow }}" position="bottom" bind:close="onClosePop">
+    <view class="pop-wrap">
+        <view class="ipt-wrap">
+            <view class="ipt-title">请输入车牌号</view>
+            <view class="ipt-list">
+                <view wx:for="{{inputAreaList}}" wx:key="{{index}}"
+                    class="{{item.index === -1 ? ' ipt-split' : ' ipt-num'}} {{activeIndex === item.index ? ' active' : ''}} {{ item.index === 7 ? ' addition-num': ''}}"
+                    bindtap="handleChooseIpt" data-index="{{item.index}}">
+                    <view wx:if="{{plateNum[item.index]}}">{{plateNum[item.index]}}</view>
+                    <view wx:if="{{item.index === 7 && (plateNum[7] === ' ' || !plateNum[7])}}" class="addition-preview">新能源</view>
+                </view>
+            </view>
+        </view>
+        <view class="confirm-wrap">
+            <van-button type="info" size="large" block disabled="{{!canSubmit}}" bind:click="confirm">
+                确定</van-button>
+        </view>
+        <view wx:if="{{showKeyboard}}" class="keyborad-wrap">
+            <view wx:for="{{iptKeyList}}" wx:key="{{index}}" data-key="{{item.key}}" data-disabled="{{item.disabled}}"
+                class="{{item.disabled ? 'disabled' : ''}}" bindtap="handleInput">
+                <text>{{item.key}}</text>
+                <view wx:if="{{showAdditionList && item.key === '字'}}" class="addtion-list">
+                    <view wx:for="{{additionKeyList}}" wx:key="{{index}}" data-key="{{item}}" bindtap="handleInput">
+                        {{item}}
+                    </view>
+                </view>
+            </view>
+            <view class="gray-key del" data-key="del" bindtap="handleRemove">
+                <image
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAqBAMAAAAUtoW9AAAAMFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlTPQ5AAAAD3RSTlMA6y8RB7yol87aIURf9oCspPo+AAABKElEQVQ4y42UsU4CQRCGL2AwgcSCWJocV9jTYWJDQ2KrsT8KShIo6C14AAoeAC1tfAWoeQMqnsECkETzy+wwewsHf5hiZ7Pf/bO3szMbRWZfzwhs0W1GmTWWOLS7jJUnOLaBhx85hk0g3M7DXR57wGw//wyjOKvEuNVZcZIFMZviVycPQP8YlrBW4SgvjCrYOv8EtHOwiD9xV6lFeNH1+7qMgIwtoKNbf9fEFeKhhzvhSo+YoiouwcrDEvCq4RKItBDrNw72TLhf1k8UXnuhrpvQwTf81A0KMKHAG2CYHW5HTChwGgid1IQCU4zDvCQwocAl3i+FNCz7IXoUlgSaPpp4emX0smmZHJpCX2CnoNT02dLkRU3bgTcSbUHevLTt+YNBn5qTj9Q/+cdgxoiYpkoAAAAASUVORK5CYII=" />
+            </view>
+        </view>
+    </view>
+</van-popup>

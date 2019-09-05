@@ -1,11 +1,12 @@
-<canvas
-  canvas-id="canvas" 
-  class="canvas" 
-  bindtouchstart="onTouchStart"
-  binderror="canvasIdErrorCallback"
->
+<view wx:if="{{tempImgPath}}" class="radar-pic-wrap">
+  <image src="{{tempImgPath}}" />
+  <view class="slot-wrap">
+    <slot></slot>
+  </view>
+</view>
+<canvas canvas-id="canvas" class="canvas {{transformImage && 'hide-canvas'}}" bindtouchstart="onTap"
+  binderror="canvasIdErrorCallback">
   <cover-view>
     <slot></slot>
   </cover-view>
 </canvas>
-

@@ -2,3 +2,24 @@
   width: 100%;
   height: 100%;
 }
+.hide-canvas {
+  position: absolute;
+  left: -1000rpx;
+}
+.radar-pic-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.radar-pic-wrap > image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.radar-pic-wrap .slot-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

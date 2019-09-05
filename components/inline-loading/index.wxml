@@ -1,0 +1,4 @@
+<view class="loading-wrap">
+    <van-loading type="{{spinner ? 'spinner' : 'circular'}}" size="{{fontSize}}rpx" color="{{color}}" />
+    <text style="color: {{color}}; font-size: {{fontSize}}rpx;">{{text}}</text>
+</view>

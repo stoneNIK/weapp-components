@@ -1,0 +1,3 @@
+<view class="hik-svg-box" style="width: {{width}}; height: {{height}};">
+    <view class="hik-svg {{name}}" style="-webkit-filter: drop-shadow({{fill}} 2000px 0);filter: drop-shadow({{fill}} 2000px 0);"></view>
+</view>

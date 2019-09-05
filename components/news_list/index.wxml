@@ -1,0 +1,50 @@
+<empty-block wx:if="{{!newsList.length && !loading}}" type="content" desc="暂无数据"></empty-block>
+<view wx:else class="news-list">
+  <template is="news-item" wx:for="{{newsList}}" wx:key="{{index}}" data="{{...item}}"></template>
+  <hik-inline-loading wx:if="{{loading}}" />
+</view>
+
+<template name="news-item">
+  <!-- 1: 文字, 2: 单图文, 3: 双图文, 4: 多图文 -->
+  <!-- 文字 -->
+  <view class="news-item" wx:if="{{displayType == 1}}" data-url="{{routeUrl}}" bindtap="linkDetail">
+    <view class="title">{{title}}</view>
+    <template is="news-item-footer" data="{{views, gmtCreateDisplay}}"></template>
+  </view>
+
+  <!-- 单图文 -->
+  <view class="news-item" wx:if="{{displayType == 2}}" data-url="{{routeUrl}}" bindtap="linkDetail">
+    <view class="news-item-box">
+      <view style="width: calc(100vw - 260rpx);">
+        <view class="title">{{title}}</view>
+        <template is="news-item-footer" data="{{views, gmtCreateDisplay}}"></template>
+      </view>
+      <image style="width: 230rpx;" mode="widthFix" lazy-load src="{{imgs[0]}}" />
+    </view>
+  </view>
+
+  <!-- 双图文 & 三图文 -->
+  <view class="news-item" wx:if="{{displayType == 3 || displayType == 4}}" data-url="{{routeUrl}}" bindtap="linkDetail">
+    <view class="title">{{title}}</view>
+    <view class="news-item-box">
+      <image mode="widthFix" wx:for="{{imgs}}" class="img{{displayType}}" lazy-load wx:key="{{index}}" src="{{item}}" />
+    </view>
+    <template is="news-item-footer" data="{{views, gmtCreateDisplay}}"></template>
+  </view>
+
+  <!-- 视频 -->
+  <view class="news-item" wx:if="{{displayType == 5}}" data-url="{{routeUrl}}" bindtap="linkDetail">
+    <view class="title">{{title}}</view>
+    <view class="news-item-box">
+      <image mode="widthFix" class="img{{displayType}}" lazy-load src="{{imgs[0]}}" />
+    </view>
+    <template is="news-item-footer" data="{{views, gmtCreateDisplay}}"></template>
+  </view>
+</template>
+
+<template name="news-item-footer">
+  <view class="footer">
+    <text>{{views}} 阅读</text>
+    <text>{{gmtCreateDisplay}}</text>
+  </view>
+</template>

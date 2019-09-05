@@ -1,0 +1,154 @@
+@input-color: #9B9B9B;
+@input-active-color         : #4C88FF;
+@input-addition-active-color: #30CD30;
+@disabled-color             : #E1E0E0;
+@padding-rows               : 20rpx;
+
+.pop-wrap {
+    min-height      : 100px;
+    background-color: #F6F6F6;
+
+    .ipt-wrap {
+        padding         : 60rpx @padding-rows;
+        background-color: #fff;
+
+        .ipt-title {
+            color      : #444444;
+            font-size  : 40rpx;
+            line-height: 56rpx;
+        }
+
+        .ipt-list {
+            margin-top     : 40rpx;
+            display        : flex;
+            align-items    : center;
+            justify-content: space-between;
+
+            >view {
+                flex: none;
+            }
+
+            .ipt-num {
+                display        : flex;
+                justify-content: center;
+                align-items    : center;
+                width          : 64rpx;
+                height         : 100rpx;
+                border-radius  : 6rpx;
+                border         : 2rpx solid @input-color;
+                font-size      : 44rpx;
+                color          : rgba(0, 0, 0, 1);
+                line-height    : 60rpx;
+                box-sizing     : border-box;
+
+                .preview(@color) {
+                    border-color: @color;
+
+                    .addition-preview {
+                        position      : relative;
+                        display       : flex;
+                        align-items   : center;
+                        flex-direction: column;
+                        font-size     : 16rpx;
+                        line-height   : 22rpx;
+                        color         : @color;
+
+                        &::before {
+                            content      : '+';
+                            font-size    : 40rpx;
+                            line-height  : 1;
+                        }
+                    }
+                }
+
+                &.active {
+                    border-color: @input-active-color;
+                }
+
+                &.addition-num {
+                    border-style: dashed;
+
+                    .preview(@input-color);
+
+                    &.active {
+                        .preview(@input-addition-active-color);
+                    }
+                }
+
+
+            }
+
+            .ipt-split {
+                width        : 20rpx;
+                height       : 20rpx;
+                background   : #b3b3b3;
+                border-radius: 100%;
+            }
+        }
+    }
+
+    .confirm-wrap {
+        margin: 100rpx @padding-rows;
+    }
+
+    .keyborad-wrap {
+        margin-top      : 220rpx;
+        padding         : 10rpx 0;
+        display         : flex;
+        align-items     : center;
+        justify-content : center;
+        flex-wrap       : wrap;
+        background-color: #E8E8E8;
+
+        @key-width : 84rpx;
+        @key-height: 64rpx;
+        @key-space : 5rpx;
+
+        .key-style () {
+            position        : relative;
+            flex            : none;
+            display         : flex;
+            align-items     : center;
+            justify-content : center;
+            margin          : 10rpx @key-space;
+            color           : #000000;
+            width           : @key-height;
+            height          : @key-width;
+            background-color: #ffffff;
+            box-shadow      : 0px 2rpx 0px 0px rgba(0, 0, 0, 0.25);
+            border-radius   : 10rpx;
+
+            &.disabled {
+                color: @disabled-color;
+            }
+        }
+
+        >view {
+            .key-style;
+
+            &.del {
+                width     : 140rpx;
+                height    : 84rpx;
+                background: #d5d5d5;
+
+                image {
+                    width : 56rpx;
+                    height: 42rpx;
+                }
+            }
+
+            .addtion-list {
+                position   : absolute;
+                top        : 0;
+                right      : 100%;
+                display    : flex;
+                align-items: center;
+
+                >view {
+                    .key-style;
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}

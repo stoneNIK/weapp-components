@@ -1,0 +1,7 @@
+<view class="wrapper">
+  <view class="line" style="background-color: {{ lineColor}};"></view>
+  <view class="text" style="font-size: {{fontSize}};color: {{textColor}};">
+    <slot></slot>
+  </view>
+  <view class="line" style="background-color: {{ lineColor}};"></view>
+</view>

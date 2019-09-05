@@ -1,0 +1,6 @@
+<view class="wrapper {{fullPage ? 'is-page' : ''}}">
+  <image src="{{ imgUrl }}"></image>
+  <text class="desc">{{ desc }}</text>
+  <text wx:if="{{ subDesc }}" class="sub-desc">{{ subDesc }}</text>
+  <slot />
+</view>

@@ -1,0 +1,29 @@
+.wrapper {
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 600rpx;
+}
+.wrapper.is-page {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  left: 0;
+  height: 100%;
+}
+.wrapper image {
+  margin-bottom: 26rpx;
+  width: 296rpx;
+  height: 238rpx;
+}
+.wrapper text {
+  font-size: 32rpx;
+  color: #B6B6B6;
+}
+.wrapper .sub-desc {
+  font-size: 24.61538462rpx;
+  color: #dadada;
+}
