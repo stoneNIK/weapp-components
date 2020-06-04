@@ -5,7 +5,7 @@
 ![demo_01](/demo/demo_01.png)
 ![demo_02](/demo/demo_02.png)
 
-- @params
+- 参数说明
 - list {Array} 数据 默认[], 数值请计算成百分比对应的 0-100 的整数值
   > [{value: 10, text: '文字', img: 'src_url', color: '#f39'}]
 - bgColor {String} 多边形背景颜色
