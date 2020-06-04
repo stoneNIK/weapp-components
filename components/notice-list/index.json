@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "empty-block": "/components/empty_block/index",
-    "hik-inline-loading": "/components/inline-loading/index"
-  }
-}

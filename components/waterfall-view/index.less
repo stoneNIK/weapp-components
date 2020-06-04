@@ -1,0 +1,61 @@
+.waterfall-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20rpx 20rpx 0;
+}
+
+.store-item {
+  margin-bottom: 20rpx;
+  width: 344rpx;
+  background-color: #fff;
+  .pic {
+    display: block;
+    width: 100%;
+  }
+  .name,
+  .short,
+  .tags {
+    padding: 0 16rpx;
+  }
+  .name {
+    margin-top: 10rpx;
+    font-size: 26rpx;
+    font-weight: 500;
+    color: rgba(51, 51, 51, 1);
+    line-height: 36rpx;
+  }
+  .short {
+    margin-top: 6rpx;
+    display: flex;
+    align-items: center;
+    .store-rate {
+      display: block;
+    }
+    text {
+      margin-left: 10rpx;
+      color: #fb6704;
+      font-size: 22rpx;
+      line-height: 32rpx;
+      & + text {
+        color: #666768;
+      }
+    }
+  }
+  .tags {
+    margin-top: 18rpx;
+    padding-bottom: 15rpx;
+    display: flex;
+    flex-wrap: wrap;
+    .store-tag {
+      display: block;
+    }
+    van-tag {
+      flex: none;
+      margin-bottom: 15rpx;
+      &:not(:last-child) {
+        margin-right: 15rpx;
+      }
+    }
+  }
+}

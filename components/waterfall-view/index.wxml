@@ -1,0 +1,26 @@
+<view class="waterfall-wrap">
+    <view id="left-waterfall">
+        <block wx:for="{{leftList}}" wx:key="index">
+            <template wx:if="{{type == 'store'}}" is="recommand-item" data="{{...item}}" />
+        </block>
+    </view>
+    <view id="right-waterfall">
+        <block wx:for="{{rightList}}" wx:key="index">
+            <template wx:if="{{type == 'store'}}" is="recommand-item" data="{{...item}}" />
+        </block>
+    </view>
+</view>
+
+<template name="recommand-item">
+    <view class="store-item" data-path="{{routeUrl}}" bindtap="navigate">
+        <image class="pic" src="{{imageUrl}}" mode="widthFix" />
+        <view class="name">{{storeName}}</view>
+        <view class="short">
+            <text>{{score}}分</text>
+            <text>{{storeFeature}}</text>
+        </view>
+        <view class="tags">
+            这里是tags列表
+        </view>
+    </view>
+</template>
