@@ -1,9 +1,9 @@
 # 微信小程序（原生） 组件
 
 ## 雷达图组件 [radar] <font color="#f63" size="3">支持 canvas 转为 Image</font>
-
-![demo_01](/demo/demo_01.png)
-![demo_02](/demo/demo_02.png)
+| | |
+--|:--:|--:
+| ![demo_01](/demo/demo_01.png) | ![demo_02](/demo/demo_02.png) |
 
 - 参数说明
 - list {Array} 数据 默认[], 数值请计算成百分比对应的 0-100 的整数值
@@ -55,3 +55,71 @@ item元素支持包含图片在内的所有内容
 ```
 <waterfall-view list="{{list}}" type="store" />
 ```
+
+## 车牌号输入法 [carnum-input]
+车牌号码输入框（包含弹出层）**使用方式：目前只支持函数式调用**
+
+1. 在页面JSON配置文件中配置组件的引入（usingComponents）：
+
+```JSON
+"carnum-input": "/components/carnum-input/index"
+```
+
+2. 在模板中添加组件DOM：
+```HTML 
+<carnum-input id="carnum-input" />
+```
+
+3. 在页面初始化以后，获取到组件的DOM对象(onLoad)：
+
+```javascript
+CarNumInput = this.selectComponent('#carnum-input')
+```
+
+4.在页面处理函数中添加调用代码：
+
+```javascript
+CarNumInput.init({
+   plateNum: this.data.formData.plateNum
+}).then(({ plateNum, callback }) => {
+   // 输入成功回调
+   // 拿到回调的plateNum进行处理，并手动调用callback()关闭弹窗
+   callback && callback()
+}).catch(({ plateNum }) => {
+   // 取消输入
+   console.log(plateNum)
+})
+```
+
+| Props Name   | Type's | Default   | Description   |
+| :----------- | ------ | --------- | ------------- |
+| limitProvince | String | | 限制省份列表, 不用间隔，e.g: '贵川京'
+| limitCity | String | | 限制城市列表， 不用间隔， e.g: 'AF'
+| initData | Object | | 初始数据
+
+车牌号说明：https://juejin.im/post/6844904103311573006
+
+Vue版本的链接：https://github.com/stoneNIK/vue-vehicle-plate
+
+## 活动loading [activity-loading]
+简易的全屏加载动画，用于类似于活动主页加载数据多的兼容
+
+```HTML
+<activity-loading finished="${boolean}" color="${color}" />
+```
+
+## 状态图章 [status-seal]
+
+JSON文件中定义组件：
+```JSON 
+"hik-status-seal": "/components/status-seal/index"
+```
+页面中调用
+```HTML 
+<hik-status-seal width="100" status="1" text="审核中"></hik-status-seal>
+```
+| Props Name   | Type's | Default   | Description   |
+| :----------- | ------ | --------- | ------------- |
+| status | Number | 1 | 状态值，对应四种颜色，<br>0：灰（invalid），1：蓝（info），2：黄（warn），3：红（danger）|
+| width | Number | 100 | 图章宽度，高度和宽度一样 px |
+| text | String | '-' | 图章文字，4个字以内最佳 |

@@ -1,0 +1,47 @@
+.progress-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 200rpx;
+  border: 4rpx solid #fa6400;
+  border-radius: 54rpx;
+  padding: 12rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.progress-wrap .progress-box {
+  width: calc(100% - 18% -  12rpx);
+  height: 22rpx;
+  border-radius: 22rpx;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+.progress-wrap .progress-box .progress-bar {
+  height: 100%;
+  transition: width 0.6s ease;
+  animation: progress-bar-stripes 2s linear infinite;
+  background-color: #fa6400;
+  background-size: 44rpx 44rpx;
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+}
+.progress-wrap .progress-text {
+  position: absolute;
+  right: 0;
+  top: -4rpx;
+  width: 18%;
+  height: 54rpx;
+  background-color: #fa6400;
+  font-size: 24rpx;
+  line-height: 34rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes progress-bar-stripes {
+  from {
+    background-position: 44rpx 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}

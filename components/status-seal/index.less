@@ -1,0 +1,128 @@
+@danger-color : #FF5B4D;
+@warn-color   : #FFB726;
+@info-color   : #4C88FF;
+@invalid-color: #D0D3DB;
+
+.seal-wrap-mixin (@color) {
+    position        : relative;
+    width           : 1000rpx;
+    height          : 890rpx;
+    background-color: #fff;
+    overflow        : hidden;
+
+    .circle-out {
+        position     : absolute;
+        bottom       : 0;
+        left         : 20rpx;
+        width        : 980rpx;
+        height       : 980rpx;
+        border       : 40rpx solid @color;
+        border-radius: 100%;
+        box-sizing   : border-box;
+    }
+
+    .circle-in {
+        position     : absolute;
+        top          : 80rpx;
+        left         : 190rpx;
+        width        : 640rpx;
+        height       : 640rpx;
+        border       : 20rpx solid @color;
+        box-sizing   : border-box;
+        border-radius: 100%;
+    }
+
+    .text {
+        position        : absolute;
+        top             : 280rpx;
+        left            : 100rpx;
+        width           : 800rpx;
+        height          : 240rpx;
+        text-align      : center;
+        line-height     : 240rpx;
+        font-size       : 200rpx;
+        color           : @color;
+        overflow        : hidden;
+        transform       : rotate(-30deg);
+        background-color: #fff;
+        overflow        : hidden;
+        z-index         : 3;
+    }
+
+    .star-wrap {
+        position        : absolute;
+        top             : 420rpx;
+        left            : 0;
+        width           : 180rpx;
+        height          : 270rpx;
+        background-color: #fff;
+        z-index         : 2;
+
+        .star-five {
+            margin-top   : 70rpx;
+            position     : relative;
+            display      : block;
+            color        : @color;
+            width        : 0rpx;
+            height       : 0rpx;
+            border-right : 50rpx solid transparent;
+            border-bottom: 35rpx solid @color;
+            border-left  : 50rpx solid transparent;
+            transform    : rotate(35deg);
+        }
+
+        .star-five:before {
+            border-bottom: 40rpx solid @color;
+            border-left  : 15rpx solid transparent;
+            border-right : 15rpx solid transparent;
+            position     : absolute;
+            height       : 0;
+            width        : 0;
+            top          : -28rpx;
+            left         : -38rpx;
+            display      : block;
+            content      : '';
+            transform    : rotate(-35deg);
+        }
+
+        .star-five:after {
+            position     : absolute;
+            display      : block;
+            color        : @color;
+            top          : 3rpx;
+            left         : -55rpx;
+            width        : 0rpx;
+            height       : 0rpx;
+            border-right : 50rpx solid transparent;
+            border-bottom: 35rpx solid @color;
+            border-left  : 50rpx solid transparent;
+            transform    : rotate(-70deg);
+            content      : '';
+        }
+
+        .star-five+.star-five {
+            margin: 80rpx 0 0 40rpx;
+        }
+    }
+}
+
+.seal-wrap {
+    transform-origin: 0 0;
+    .seal-wrap-mixin(@info-color);
+
+    &.invalid {
+        .seal-wrap-mixin(@invalid-color);
+    }
+
+    &.info {
+        .seal-wrap-mixin(@info-color);
+    }
+
+    &.warn {
+        .seal-wrap-mixin(@warn-color);
+    }
+
+    &.danger {
+        .seal-wrap-mixin(@danger-color);
+    }
+}

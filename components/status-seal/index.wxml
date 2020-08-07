@@ -1,0 +1,11 @@
+<view class="seal-wrap-container" style="width: {{width}}rpx;height: {{width}}rpx;">
+    <view class="seal-wrap {{types[status]}}" style="transform: scale({{width/1000}});">
+        <view class="circle-out"></view>
+        <view class="circle-in"></view>
+        <view class="star-wrap">
+            <view class="star-five"></view>
+            <view class="star-five"></view>
+        </view>
+        <view class="text" style="font-size: {{fontSize}}rpx;">{{text}}</view>
+    </view>
+</view>

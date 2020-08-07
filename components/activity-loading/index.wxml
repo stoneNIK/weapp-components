@@ -1,0 +1,16 @@
+<wxs module="tools">
+    var toString = function(arr) {
+    return arr.toString()
+    }
+    module.exports = {
+    toString: toString
+    }
+</wxs>
+<view class="progress-wrap" style="border-color: {{colors[0]}};">
+    <view class="progress-box" style="background-image: linear-gradient({{tools.toString(colors)}});">
+        <view class="progress-bar" style="width: {{percent}}%;"></view>
+    </view>
+    <view class="progress-text" style="background-image: linear-gradient({{tools.toString(colors)}});">
+        {{percent}}%
+    </view>
+</view>
