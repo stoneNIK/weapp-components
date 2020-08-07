@@ -1,9 +1,9 @@
 # 微信小程序（原生） 组件
 
 ## 雷达图组件 [radar] <font color="#f63" size="3">支持 canvas 转为 Image</font>
-| | |
---|:--:|--:
-| ![demo_01](/demo/demo_01.png) | ![demo_02](/demo/demo_02.png) |
+
+<img src="./demo/demo_01.png" height="200px" />
+<img src="./demo/demo_02.png" height="200px" />
 
 - 参数说明
 - list {Array} 数据 默认[], 数值请计算成百分比对应的 0-100 的整数值
@@ -76,7 +76,7 @@ item元素支持包含图片在内的所有内容
 CarNumInput = this.selectComponent('#carnum-input')
 ```
 
-4.在页面处理函数中添加调用代码：
+4. 在页面处理函数中添加调用代码：
 
 ```javascript
 CarNumInput.init({
@@ -120,6 +120,8 @@ JSON文件中定义组件：
 ```
 | Props Name   | Type's | Default   | Description   |
 | :----------- | ------ | --------- | ------------- |
-| status | Number | 1 | 状态值，对应四种颜色，<br>0：灰（invalid），1：蓝（info），2：黄（warn），3：红（danger）|
+| status | Number | 1 | 状态值，对应四种颜色：<br>0：灰（invalid），1：蓝（info），2：黄（warn），3：红（danger）|
 | width | Number | 100 | 图章宽度，高度和宽度一样 px |
 | text | String | '-' | 图章文字，4个字以内最佳 |
+
+如果需要自定义颜色，可以再自行扩展一个参数color，优先级高于status参数
