@@ -91,6 +91,12 @@ Component({
       if (this.data.checkKeyBoardMap) {
         iptKeyList = this.data.checkKeyBoardMap(iptKeyList, this.data.plateNum, this.data.activeIndex);
       }
+      if(iptKeyList.find(e=> e.disabled && e.key == this.data.plateNum[this.data.activeIndex])){
+        // 如果当前位置上有值，且该选项被禁用的，则清空当前位置的值
+        this.setData({
+          plateNum: this.replaceIndexChar(this.data.plateNum, this.data.activeIndex)
+        })
+      }
       this.setData({
         iptKeyList: iptKeyList,
         showAdditionList: !!showAdditionList

@@ -1,9 +1,9 @@
-<van-popup show="{{ isShow }}" position="bottom" bind:close="onClosePop">
+<van-popup show="{{ isShow }}" position="bottom" z-index="10000" bind:close="onClosePop">
     <view class="pop-wrap">
         <view class="ipt-wrap">
             <view class="ipt-title">请输入车牌号</view>
             <view class="ipt-list">
-                <view wx:for="{{inputAreaList}}" wx:key="{{index}}"
+                <view wx:for="{{inputAreaList}}" wx:key="index"
                     class="{{item.index === -1 ? ' ipt-split' : ' ipt-num'}} {{activeIndex === item.index ? ' active' : ''}} {{ item.index === 7 ? ' addition-num': ''}}"
                     bindtap="handleChooseIpt" data-index="{{item.index}}">
                     <view wx:if="{{plateNum[item.index]}}">{{plateNum[item.index]}}</view>
@@ -16,11 +16,11 @@
                 确定</van-button>
         </view>
         <view wx:if="{{showKeyboard}}" class="keyborad-wrap">
-            <view wx:for="{{iptKeyList}}" wx:key="{{index}}" data-key="{{item.key}}" data-disabled="{{item.disabled}}"
+            <view wx:for="{{iptKeyList}}" wx:key="index" data-key="{{item.key}}" data-disabled="{{item.disabled}}"
                 class="{{item.disabled ? 'disabled' : ''}}" bindtap="handleInput">
                 <text>{{item.key}}</text>
                 <view wx:if="{{showAdditionList && item.key === '字'}}" class="addtion-list">
-                    <view wx:for="{{additionKeyList}}" wx:key="{{index}}" data-key="{{item}}" bindtap="handleInput">
+                    <view wx:for="{{additionKeyList}}" wx:key="index" data-key="{{item}}" bindtap="handleInput">
                         {{item}}
                     </view>
                 </view>
